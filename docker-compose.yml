@@ -1,0 +1,32 @@
+version: '2.1'
+
+services:
+  scrumbot:
+    build: ./bot
+    restart: on-failure
+    volumes:
+      - ./bot/config.yml:/home/scrumbot/config.yml
+
+    links:
+      - "scrumbot_flask:flaskapp"
+
+    environment:
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      VERIFICATION_TOKEN: ${VERIFICATION_TOKEN}
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+      JIRA_UNAME: ${JIRA_UNAME}
+      JIRA_TOKEN: ${JIRA_TOKEN}
+      BOT_LOGLEVEL: DEBUG
+      TEST: "1"
+
+  scrumbot_flask:
+    build: ./flask
+    restart: on-failure
+    environment:
+          FLASK_LOGLEVEL: INFO
+
+    ports:
+      - 5000:5000
+    volumes:
+      - ./data:/home/scrumbot/data
+      - ./bot/config.yml:/config.yml
