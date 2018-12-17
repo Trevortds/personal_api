@@ -28,6 +28,6 @@ from app import routes, models
 
 @app.shell_context_processor
 def make_shell_context():
-    return {"db": db, "User": models.User, "Issue": models.Issue, "Answer": models.Answer}
+    return {"db": db, "State": models.State, "CommuteTimeEntry": models.CommuteTimeEntry}
 
 # TODO add an authentication configuration website

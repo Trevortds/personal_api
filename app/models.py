@@ -11,8 +11,24 @@ class State(db.Model):
 
 
 
+class CommuteTimeEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
 
+    departure_time = db.Column(db.DateTime())
+    arrival_time = db.Column(db.DateTime())
+    travel_time = db.Column(db.Integer)
 
+    # maybe information from port authority twitter will go here one day
+    twitter_delay = db.Column(db.Integer)
+
+    # maybe google maps / osm info will go here some day
+    maps_prediction = db.Column(db.Integer)
+
+    model_prediction = db.Column(db.Float)
+
+    def __repr__(self):
+        return "<Commute time entry for {}, arrival: {}, travel time: {} >".format(self.departure_time,
+                                                                                   self.arrival_time, self.travel_time)
 
 
 # class Answer(db.Model):

@@ -1,10 +1,13 @@
 import json
+from io import BytesIO
 
 from app import app
 from app import db
-from flask import jsonify, request, abort, make_response
+from flask import jsonify, request, abort, make_response, send_file
 from app.models import State
+from dateutil import parser
 
+from app.features import commute
 
 @app.errorhandler(400)
 def custom400(error):
@@ -20,6 +23,44 @@ def custom404(error):
 def root_route():
     return "Hello there"
 
+@app.route("/api/commute/work/", methods=["GET"])
+def time_to_work():
+    # TODO add confidence interval here, as well as maps and twitter stuff maybe
+    return jsonify({"minutes": commute.predict()})
+
+@app.route("/api/commute/work/", methods=["POST"])
+def add_time():
+    # TODO add maps and twitter stuff here
+
+    if not request.json or \
+            "start_time" not in request.json or \
+            "arrive_time" not in request.json:
+        abort(400, "invalid request, send start and arrival time")
+
+    start_time = parser.parse(request.json["start_time"])
+    arrive_time = parser.parse(request.json["arrive_time"])
+
+    commute.add_time_entry(start_time, arrive_time)
+
+    return "created", 201
+
+@app.route("/api/commute/work/histogram", methods=["GET"])
+def get_histogram():
+    fig = commute.CommuteModel.get_instance().get_histogram()
+    img = BytesIO()
+    fig.savefig(img, format="png")
+    img.seek(0)
+
+    return send_file(img, mimetype="image/png")
+
+@app.route("/api/commute/work/plot", methods=["GET"])
+def get_plot():
+    fig = commute.CommuteModel.get_instance().get_plot()
+    img = BytesIO()
+    fig.savefig(img, format="png")
+    img.seek(0)
+
+    return send_file(img, mimetype="image/png")
 
 # @app.route('/api/users', methods=["GET"])
 # def get_user():
