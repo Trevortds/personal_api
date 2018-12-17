@@ -1,8 +1,8 @@
 FROM python:3.6-alpine
 
-RUN adduser -D scrumbot
+RUN adduser -D manager
 
-WORKDIR /home/scrumbot
+WORKDIR /home/manager
 
 RUN apk --update add --virtual build-dependencies gcc musl-dev
 
@@ -20,10 +20,10 @@ RUN chmod +x boot.sh
 ENV FLASK_APP flask_app.py
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
-ENV DATA_DIR=/home/scrumbot/data
+ENV DATA_DIR=/home/manager/data
 
 
-RUN chown -R scrumbot:scrumbot ./
+RUN chown -R manager:manager ./
 
 EXPOSE 5000
 ENTRYPOINT ["./boot.sh"]

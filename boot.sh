@@ -1,6 +1,6 @@
 #!/bin/sh
 
-chmod 777 /home/scrumbot/data
+chmod 777 /home/manager/data
 
 flask db upgrade
 
