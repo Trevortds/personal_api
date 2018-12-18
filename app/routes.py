@@ -21,7 +21,7 @@ def custom404(error):
 
 @app.route('/')
 def root_route():
-    return "Hello there"
+    return "Hello there, friend"
 
 @app.route("/api/commute/work/", methods=["GET"])
 def time_to_work():
