@@ -4,7 +4,7 @@ RUN adduser -D manager
 
 WORKDIR /home/manager
 
-RUN apk --update add --virtual build-dependencies gcc musl-dev
+RUN apk --update add --virtual build-dependencies gcc musl-dev freetype-dev libpng libffi
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt

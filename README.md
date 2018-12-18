@@ -5,8 +5,8 @@ Future plans are to integrate with tasker, qpython, jira, toggl,
  
 todo: 
 
-* endpoint to get information about commute time
-* endpoint to post data about latest commute
+* endpoint to get information about commute time CHECK
+* endpoint to post data about latest commute CHECK
 * authentication for everything below
 * endpoints to control toggl
 * web frontend for everything
