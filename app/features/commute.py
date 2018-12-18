@@ -1,6 +1,8 @@
 import datetime
 import json
 
+import pytz
+
 from app import app
 from app import db
 from flask import jsonify, request, abort, make_response
@@ -50,7 +52,8 @@ class CommuteModel:
         start_time = []
         data = []
         for entry in CommuteTimeEntry.query.all():
-            start_time.append(entry.departure_time.hour + entry.departure_time.minute / 60)
+            real_departure_time = entry.departure_time.replace(tzinfo=pytz.utc).astimezone(tz=pytz.timezone("America/New_York"))
+            start_time.append(real_departure_time.hour + real_departure_time.minute / 60)
             data.append(entry.travel_time)
         self.start_time = np.asarray(start_time)
         self.data = np.asarray(data)
@@ -179,6 +182,14 @@ def predict():
 
 
 def add_time_entry(start_datetime, end_datetime, twitter_delay=None, maps_prediction=None):
+    """
+
+    :param start_datetime: UTC time
+    :param end_datetime: UTC time
+    :param twitter_delay: time from twitter (coming soon)
+    :param maps_prediction: time from maps (coming soon)
+    :return:
+    """
     new_elem = CommuteTimeEntry()
     new_elem.departure_time = start_datetime
     new_elem.arrival_time = end_datetime

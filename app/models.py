@@ -8,14 +8,17 @@ class State(db.Model):
     '''
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.String(64))
+    start_time = db.Column(db.DateTime(timezone=True))
 
+    def __repr__(self):
+        return "<State entry value: {}, start: {} >".format(self.value,self.start_time)
 
 
 class CommuteTimeEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
-    departure_time = db.Column(db.DateTime())
-    arrival_time = db.Column(db.DateTime())
+    departure_time = db.Column(db.DateTime(timezone=True))
+    arrival_time = db.Column(db.DateTime(timezone=True))
     travel_time = db.Column(db.Integer)
 
     # maybe information from port authority twitter will go here one day

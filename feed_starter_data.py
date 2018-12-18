@@ -2,6 +2,7 @@ import datetime
 import math
 import sys
 
+import pytz
 import requests
 
 data = [
@@ -97,6 +98,8 @@ for start, length in zip(start_time, data):
     start_datetime = datetime.datetime(year=2017, month=10, day=15,
                                        hour=int(start), minute=(int((start-int(start))*60)))
     end_datetime = start_datetime + datetime.timedelta(seconds=length*60)
+    start_datetime = start_datetime.astimezone(tz=pytz.utc)
+    end_datetime = end_datetime.astimezone(tz=pytz.utc)
     requests.post(sys.argv[1] + "/api/commute/work/", json={"start_time": start_datetime.isoformat(),
                                                             "arrive_time": end_datetime.isoformat()})
 
