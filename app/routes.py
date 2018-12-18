@@ -7,7 +7,7 @@ from flask import jsonify, request, abort, make_response, send_file
 from app.models import State
 from dateutil import parser
 
-from app.features import commute
+from app.features import commute, state
 
 @app.errorhandler(400)
 def custom400(error):
@@ -21,15 +21,21 @@ def custom404(error):
 
 @app.route('/')
 def root_route():
-    return "Hello there, friendss"
+    return "Hello there, friend"
+
 
 @app.route("/api/commute/work/", methods=["GET"])
 def time_to_work():
     # TODO add confidence interval here, as well as maps and twitter stuff maybe
     return jsonify({"minutes": commute.predict()})
 
+
 @app.route("/api/commute/work/", methods=["POST"])
 def add_time():
+    """
+    Input HAS to be UTC!
+    :return:
+    """
     # TODO add maps and twitter stuff here
 
     if not request.json or \
@@ -44,6 +50,7 @@ def add_time():
 
     return "created", 201
 
+
 @app.route("/api/commute/work/histogram", methods=["GET"])
 def get_histogram():
     fig = commute.CommuteModel.get_instance().get_histogram()
@@ -53,6 +60,7 @@ def get_histogram():
 
     return send_file(img, mimetype="image/png")
 
+
 @app.route("/api/commute/work/plot", methods=["GET"])
 def get_plot():
     fig = commute.CommuteModel.get_instance().get_plot()
@@ -61,6 +69,26 @@ def get_plot():
     img.seek(0)
 
     return send_file(img, mimetype="image/png")
+
+
+@app.route("/api/state", methods=["GET"])
+def get_state():
+    current_state = state.get_state()
+    return jsonify({"value": current_state.value,
+                    "since": current_state.start_time})
+
+
+@app.route("/api/state", methods=["POST"])
+def new_state():
+    if not request.json or \
+            "value" not in request.json:
+        abort(400, "invalid request, send state value")
+
+    if state.update_state(request.json["value"]):
+        return "updated", 201
+    else:
+        return "error: failed to change state", 500
+
 
 # @app.route('/api/users', methods=["GET"])
 # def get_user():
