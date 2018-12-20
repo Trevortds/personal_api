@@ -2,12 +2,14 @@ import json
 from io import BytesIO
 
 from app import app
+from app.forms import LoginForm
 from app import db
-from flask import jsonify, request, abort, make_response, send_file
+from flask import jsonify, request, abort, make_response, send_file, render_template, flash, redirect, url_for
 from app.models import State
 from dateutil import parser
 
 from app.features import commute, state
+
 
 @app.errorhandler(400)
 def custom400(error):
@@ -20,8 +22,19 @@ def custom404(error):
 
 
 @app.route('/')
-def root_route():
-    return "Hello there, friend"
+@app.route('/index')
+def index():
+    user = {"username": "guest"}
+    return render_template("index.html", title="home", user=user)
+
+
+@app.route("/login", methods=["GET","POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        flash("Login requested for user {}, remember_me={}".format(form.username.data, form.remember_me.data))
+        return redirect(url_for('index'))
+    return render_template("login.html", title="Sign In", form=form)
 
 
 @app.route("/api/commute/work/", methods=["GET"])
