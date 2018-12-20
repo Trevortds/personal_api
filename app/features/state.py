@@ -8,6 +8,10 @@ from app.models import State, CommuteTimeEntry
 
 
 def get_state():
+    """
+    todo change return to json object, and change time to optional time zone in the query (defaults to nyc)
+    :return:
+    """
     return State.query.filter_by(id=0).first()
 
 

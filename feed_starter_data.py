@@ -88,6 +88,8 @@ start_time = [
 if len(data) != len(start_time):
     raise Exception("different lengths!")
 
+print(len(data))
+
 if len(sys.argv) != 2:
     print("please provide server name")
     sys.exit(1)
@@ -96,8 +98,8 @@ for start, length in zip(start_time, data):
     print(start, length)
     print((int((start-int(start))*60)))
     start_datetime = datetime.datetime(year=2017, month=10, day=15,
-                                       hour=int(start), minute=(int((start-int(start))*60)),
-                                       tzinfo=pytz.timezone("America/New_York"))
+                                       hour=int(start), minute=(int((start-int(start))*60)))
+    start_datetime = pytz.timezone("America/New_York").localize(start_datetime)
     end_datetime = start_datetime + datetime.timedelta(seconds=length*60)
     start_datetime = start_datetime.astimezone(tz=pytz.utc)
     end_datetime = end_datetime.astimezone(tz=pytz.utc)

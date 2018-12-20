@@ -97,7 +97,7 @@ class CommuteModel:
                  self.start_time[-last_n:], self.t[-last_n:] + self.mean, 'sr'
                  )
         # plt.ylim(30, 70)
-        plt.xlim(7, 10.6)
+        # plt.xlim(7, 10.6)
         return fig
 
     def get_histogram(self):
