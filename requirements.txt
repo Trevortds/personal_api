@@ -70,3 +70,4 @@ zope.interface>=4.5.0
 pytz>=2018.5
 Flask-WTF>=0.14.2
 WTForms>=2.2.1
+flask-login>=0.4.1

@@ -4,6 +4,7 @@ from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager
 
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ app.logger.setLevel(numeric_level)
 
 app.url_map.strict_slashes = False
 
+login = LoginManager(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 

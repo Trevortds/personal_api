@@ -7,6 +7,9 @@ todo:
 
 * endpoint to get information about commute time CHECK
 * endpoint to post data about latest commute CHECK
+* webpage that asks for login if the user isn't on my home wifi
+  * if the user is on home wifi, show them menu stuff instead (read only), with option to log in as me
+  * otherwise, allow no navigation from landing page
 * authentication for everything below
 * endpoints to control toggl
 * web frontend for everything
