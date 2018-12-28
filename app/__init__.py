@@ -22,6 +22,7 @@ app.logger.setLevel(numeric_level)
 app.url_map.strict_slashes = False
 
 login = LoginManager(app)
+login.login_view = 'login'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
@@ -30,6 +31,6 @@ from app import routes, models
 
 @app.shell_context_processor
 def make_shell_context():
-    return {"db": db, "State": models.State, "CommuteTimeEntry": models.CommuteTimeEntry}
+    return {"db": db, "State": models.State, "CommuteTimeEntry": models.CommuteTimeEntry, "User": models.User}
 
 # TODO add an authentication configuration website

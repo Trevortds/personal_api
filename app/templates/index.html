@@ -1,5 +1,5 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1> Hello there, {{ user.username }}</h1>
+<h1> Hello there, {{ current_user.username if not current_user.is_anonymous else "guest" }}</h1>
 {% endblock %}
