@@ -31,6 +31,8 @@ from app import routes, models
 
 @app.shell_context_processor
 def make_shell_context():
-    return {"db": db, "State": models.State, "CommuteTimeEntry": models.CommuteTimeEntry, "User": models.User}
+    return {"db": db, "State": models.State, "CommuteTimeEntry": models.CommuteTimeEntry, "User": models.User,
+            "recipes": models.recipes, "Recipe": models.Recipe, "Ingredient": models.Ingredient,
+            "NormalizedIngredient": models.NormalizedIngredient}
 
 # TODO add an authentication configuration website

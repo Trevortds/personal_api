@@ -57,7 +57,52 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
-    # class Answer(db.Model):
+
+recipes = db.Table("recipes",
+                   db.Column("recipe_id", db.Integer, db.ForeignKey('recipe.id'), primary_key=True),
+                   db.Column("ingredient_id", db.Integer, db.ForeignKey('ingredient.id'), primary_key=True)
+                   )
+
+
+class Recipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ingredients = db.relationship('Ingredient', secondary=recipes, lazy='subquery',
+                                  backref=db.backref("recipes", lazy=True))
+    amounts = db.Column(db.PickleType)
+    amounts_str = db.Column(db.Text)
+    instructions = db.Column(db.Text)
+    cb_url = db.Column(db.String(256))
+    name = db.Column(db.String(64))
+    rating = db.Column(db.Integer)
+
+
+    def __repr__(self):
+        return "<Recipe {}, {} >".format(self.id, self.name)
+
+
+class Ingredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True)
+    in_cabinet = db.Column(db.Boolean)
+    # normalized_id = db.Column(db.Integer, index=True)
+    # normalized_name = db.Column(db.String(64))
+    normalized_id = db.Column(db.Integer, db.ForeignKey("normalized_ingredient.id"), nullable=False)
+    normalized = db.relationship("NormalizedIngredient", backref="ingredients", lazy=True)
+
+
+    def __repr__(self):
+        return "<Ingredient {}, {} in cabinet: {} >".format(self.id, self.name, self.in_cabinet)
+
+class NormalizedIngredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+
+    def __repr__(self):
+        return "<Normalized ingredient {}, {} >".format(self.id, self.name)
+
+
+
+# class Answer(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     team = db.Column(db.String(64), index=True)
 #     issue_id = db.Column(db.Integer, index=True)
