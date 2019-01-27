@@ -1,8 +1,8 @@
-"""adding cocktail recipes
+"""adding cocktails
 
-Revision ID: 0554dfad6d63
+Revision ID: 0bda16ddfd19
 Revises: b7a0d0b095d6
-Create Date: 2019-01-23 20:16:56.289759
+Create Date: 2019-01-27 11:33:03.682574
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0554dfad6d63'
+revision = '0bda16ddfd19'
 down_revision = 'b7a0d0b095d6'
 branch_labels = None
 depends_on = None
@@ -31,7 +31,8 @@ def upgrade():
     sa.Column('cb_url', sa.String(length=256), nullable=True),
     sa.Column('name', sa.String(length=64), nullable=True),
     sa.Column('rating', sa.Integer(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
     )
     op.create_table('ingredient',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -43,11 +44,10 @@ def upgrade():
     )
     op.create_index(op.f('ix_ingredient_name'), 'ingredient', ['name'], unique=False)
     op.create_table('recipes',
-    sa.Column('recipe_id', sa.Integer(), nullable=False),
-    sa.Column('ingredient_id', sa.Integer(), nullable=False),
+    sa.Column('recipe_id', sa.Integer(), nullable=True),
+    sa.Column('ingredient_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['ingredient_id'], ['ingredient.id'], ),
-    sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
-    sa.PrimaryKeyConstraint('recipe_id', 'ingredient_id')
+    sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], )
     )
     # ### end Alembic commands ###
 

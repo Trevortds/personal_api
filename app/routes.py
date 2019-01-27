@@ -1,16 +1,14 @@
-import json
 from io import BytesIO
 
 from app import app
 from app.forms import LoginForm
-from app import db
 from flask_login import current_user, login_user, logout_user, login_required
 from flask import jsonify, request, abort, make_response, send_file, render_template, flash, redirect, url_for
-from app.models import State, User
+from app.models import User
 from dateutil import parser
 from werkzeug.urls import url_parse
 
-from app.features import commute, state
+from app.features import commute, state, cocktails
 
 
 @app.errorhandler(400)
@@ -124,6 +122,29 @@ def new_state():
     else:
         return "error: failed to change state", 500
 
+
+@app.route("/api/cocktails/<id>", methods=["GET"])
+def get_recipe(id):
+    return jsonify(cocktails.get_cocktail_recipe(id).to_dict())
+
+
+@app.route("/api/cocktails/add_cb", methods=["POST"])
+def add_recipe():
+    if not request.json or \
+            "Ingredients" not in request.json or \
+            "Instructions" not in request.json or \
+            "Name" not in request.json or \
+            "Url" not in request.json:
+        abort(400, "invalid request, send ingredients, instructions, name, and url")
+    if cocktails.add_cocktail_recipe_cb(request.json["Name"], request.json["Url"], request.json["Instructions"],
+                                        request.json["Ingredients"]):
+        return "added", 201
+    else:
+        return "cocktail recipe already exists", 409
+
+@app.route("/api/cocktails/search", methods=["POST"])
+def search_recipes():
+    return "not implemented", 501
 
 # @app.route('/api/users', methods=["GET"])
 # def get_user():

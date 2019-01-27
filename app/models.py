@@ -59,8 +59,8 @@ def load_user(id):
 
 
 recipes = db.Table("recipes",
-                   db.Column("recipe_id", db.Integer, db.ForeignKey('recipe.id'), primary_key=True),
-                   db.Column("ingredient_id", db.Integer, db.ForeignKey('ingredient.id'), primary_key=True)
+                   db.Column("recipe_id", db.Integer, db.ForeignKey('recipe.id')),
+                   db.Column("ingredient_id", db.Integer, db.ForeignKey('ingredient.id'))
                    )
 
 
@@ -72,9 +72,19 @@ class Recipe(db.Model):
     amounts_str = db.Column(db.Text)
     instructions = db.Column(db.Text)
     cb_url = db.Column(db.String(256))
-    name = db.Column(db.String(64))
+    name = db.Column(db.String(64), unique=True)
     rating = db.Column(db.Integer)
 
+    def to_dict(self):
+        output = {}
+        output["name"] = self.name
+        output["amounts_str"] = self.amounts_str
+        output["amounts"] = self.amounts
+        output["cb_url"] = self.cb_url
+        output["rating"] = self.rating
+        output["ingredients"] = [ingredient.name for ingredient in self.ingredients]
+        output["missing_ingredients"] = [ingredient.in_cabinet for ingredient in self.ingredients].count(False)
+        return output
 
     def __repr__(self):
         return "<Recipe {}, {} >".format(self.id, self.name)
